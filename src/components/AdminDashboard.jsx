@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+// Added query, orderBy, and limit for Firebase optimization
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, limit } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 
 const AdminDashboard = ({ user }) => {
   const navigate = useNavigate();
   
   // Dashboard State
-  const [activeTab, setActiveTab] = useState('questions'); // Defaulted to questions for you
+  const [activeTab, setActiveTab] = useState('questions'); 
   const [usersList, setUsersList] = useState([]);
   const [questionsList, setQuestionsList] = useState([]);
   const [loadingData, setLoadingData] = useState(false);
 
-  // Updated Form State to match your Firebase exact fields
+  // Form State
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [dayNumber, setDayNumber] = useState('');
@@ -28,19 +29,22 @@ const AdminDashboard = ({ user }) => {
     setLoadingData(true);
     try {
       if (activeTab === 'users') {
-        const querySnapshot = await getDocs(collection(db, "users"));
+        
+        // --- FIREBASE OPTIMIZATION: Only fetch the 50 most recent users! ---
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, orderBy("lastLogin", "desc"), limit(50)); 
+        
+        const querySnapshot = await getDocs(q);
         const usersData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        usersData.sort((a, b) => {
-          const dateA = a.lastLogin?.toDate ? a.lastLogin.toDate() : new Date(0);
-          const dateB = b.lastLogin?.toDate ? b.lastLogin.toDate() : new Date(0);
-          return dateB - dateA;
-        });
+        
+        // Note: We don't need manual javascript sorting anymore because orderBy handled it!
         setUsersList(usersData);
+        
       } else if (activeTab === 'questions') {
         const querySnapshot = await getDocs(collection(db, "questions"));
         const qData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         
-        // Sort by dayNumber instead of day
+        // Sort by dayNumber
         qData.sort((a, b) => (a.dayNumber || 0) - (b.dayNumber || 0));
         setQuestionsList(qData);
       }
@@ -83,7 +87,6 @@ const AdminDashboard = ({ user }) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // The payload maps EXACTLY to your Firebase fields
       const payload = {
         dayNumber: parseInt(dayNumber), 
         topic: topic.trim(), 
@@ -151,7 +154,7 @@ const AdminDashboard = ({ user }) => {
             {/* USERS VIEW */}
             {activeTab === 'users' && (
               <div>
-                <h3 style={styles.sectionTitle}>Registered Users ({usersList.length})</h3>
+                <h3 style={styles.sectionTitle}>Recent Users</h3>
                 {usersList.length === 0 ? (
                   <p>No users found yet.</p>
                 ) : (
