@@ -2,16 +2,14 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// Your exact keys from the screenshot
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAUe1rBMOt0kQLuKtHgcCmqqsmv32sedb8",
-  authDomain: "algostreak-c136a.firebaseapp.com",
-  projectId: "algostreak-c136a",
-  storageBucket: "algostreak-c136a.firebasestorage.app",
-  messagingSenderId: "811696151043",
-  appId: "1:811696151043:web:46ca4de9cba9a4672ccc36",
-  measurementId: "G-3MHHCRG8KK"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase

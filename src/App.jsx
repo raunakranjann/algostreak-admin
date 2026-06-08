@@ -9,6 +9,8 @@ import PrivacyPolicy from './legal/PrivacyPolicy';
 import TermsConditions from './legal/TermsConditions';
 import Disclaimer from './legal/Disclaimer';
 import Developer from './components/Developer';
+import Support from './components/Support';
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +55,7 @@ function App() {
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/developer" element={<Developer />} /> 
-
+        <Route path="/support" element={<Support />} /> 
         {/* Fallback Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
