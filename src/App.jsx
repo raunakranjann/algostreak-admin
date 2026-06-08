@@ -8,7 +8,7 @@ import AdminDashboard from './components/AdminDashboard';
 import PrivacyPolicy from './legal/PrivacyPolicy';
 import TermsConditions from './legal/TermsConditions';
 import Disclaimer from './legal/Disclaimer';
-
+import Developer from './components/Developer';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,8 @@ function App() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
-        
+        <Route path="/developer" element={<Developer />} /> 
+
         {/* Fallback Redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
